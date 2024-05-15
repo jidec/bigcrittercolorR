@@ -10,7 +10,7 @@
 #sample_n_per_taxon = NA
 #point_image_folder = NA
 
-plotTaxonDiffsPCA <- function(bcc_records,taxon="species",sample_n_taxa=NA,sample_n_per_taxon=NA,subtaxon=NA,point_image_folder=NA){
+plotTaxonDiffsPCA <- function(bcc_records,taxon="species",sample_n_taxa=5,sample_n_per_taxon=NA,subtaxon=NA,point_image_folder=NA){
     library(stringr)
     library(dplyr)
     library(ggplot2)
@@ -34,6 +34,8 @@ plotTaxonDiffsPCA <- function(bcc_records,taxon="species",sample_n_taxa=NA,sampl
     scores$genus <- as.factor(data$genus)
     scores$sex <- as.factor(data$sex)
     scores$img_id <- data$img_id
+    # todo prevent the final records_with_metrics from getting img_id_x
+    scores$img_id <- as.factor(data$img_id_x)
 
     if(!is.na(sample_n)){
         scores <- scores %>%
@@ -42,8 +44,6 @@ plotTaxonDiffsPCA <- function(bcc_records,taxon="species",sample_n_taxa=NA,sampl
                 col_data %in% sample(unique(col_data), sample_n_taxa)
             })
     }
-
-    scores2 <- scores
 
     if(!is.na(subtaxon)){
         scores <- scores %>% group_by(.data[[subtaxon]]) %>%
